@@ -5,8 +5,8 @@ namespace App\Http\Requests\Task;
 use Illuminate\Validation\Rule;
 use App\States\Task\TaskStatusState;
 use Illuminate\Database\Query\Builder;
+use App\States\Task\ValidTaskStatusRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Spatie\ModelStates\Validation\ValidStateRule;
 
 class UpdateTaskRequest extends FormRequest
 {
@@ -36,7 +36,7 @@ class UpdateTaskRequest extends FormRequest
             ],
             'description'=>['sometimes','nullable','string'],
             'due_date'=>['sometimes','required','after:now'],
-            'status'=>['sometimes',new ValidStateRule(TaskStatusState::class)],
+            'status'=>['sometimes',new ValidTaskStatusRule(TaskStatusState::class)],
         ];
     }
 }

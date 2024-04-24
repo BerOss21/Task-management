@@ -29,7 +29,7 @@ class TaskController extends Controller
 
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        $task->update($request->validated());
+        if(count($request->validated())) $task->update($request->validated());
 
         return response('',204);
     }

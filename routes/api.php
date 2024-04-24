@@ -11,6 +11,14 @@ Route::middleware('guest:sanctum')->group(function(){
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::get('user',[AuthController::class,'user'])->name('user');
-    Route::apiResource('tasks',TaskController::class);
+    Route::apiResource('tasks',TaskController::class,[
+        'middleware'=>[
+            'tasks.index'=>'can:viewAny,App\Models\Task',
+            'tasks.show'=>'can:view,task',
+            'tasks.store'=>'can:create,App\Models\Task',
+            'tasks.update'=>'can:update,task',
+            'tasks.destroy'=>'can:delete,task'
+        ]
+    ]);
 });
 
