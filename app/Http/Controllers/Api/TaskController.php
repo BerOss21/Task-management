@@ -31,7 +31,7 @@ class TaskController extends Controller
     {
         if(count($request->validated())) $task->update($request->validated());
 
-        return response('',204);
+        return new TaskResource($task->fresh());
     }
 
     public function destroy(Task $task)

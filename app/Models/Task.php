@@ -19,7 +19,7 @@ class Task extends Model
     {
         return [
             'status' => TaskStatusState::class,
-            'due_date'=>'datetime:d-m-Y'
+            'due_date'=>'datetime'
         ];
     }
 

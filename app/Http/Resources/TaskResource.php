@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,7 +19,8 @@ class TaskResource extends JsonResource
             'id'=>$this->id,
             'title'=>$this->title,
             'description'=>$this->description,
-            'due_date'=>$this->due_date,
+            'description_preview'=>Str::limit($this->description,20),
+            'due_date'=>$this->due_date->format('d/m/Y'),
             'status'=>[
                 'name'=>$this->status,
                 'color'=>$this->status->color()

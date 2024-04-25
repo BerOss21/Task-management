@@ -1,12 +1,18 @@
 <template>
-    <nav>
-        <router-link :to="{name:'home'}">Home link</router-link>
-        <router-link :to="{name:'contact'}">Contact link</router-link>
-    </nav>
-    <div class="bg-slate-400">
-        Yes 
+    <div class="relative h-screen">
+        <Navbar/>
         <router-view></router-view>
+        <!-- <footer class="footer footer-center p-4 bg-base-300 text-base-content absolute bottom-0">
+            <aside>
+                <p>Copyright © 2024 - All right reserved by ACME Industries Ltd</p>
+            </aside>
+        </footer> -->
     </div>
 
 </template>
+
+<script setup>
+import Navbar from './components/Navbar.vue';
+
+</script>
 
