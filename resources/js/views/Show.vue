@@ -53,7 +53,7 @@
 
                                     <template v-else>
                                         <dt class="text-sm font-medium text-gray-500">Due Date</dt>
-                                        <dd class="mt-1 text-sm text-gray-900">{{ task.due_date }}</dd>
+                                        <dd class="mt-1 text-sm text-gray-900">{{ task.due_date.dmy }}</dd>
                                     </template>
                                 </div>
                             </dl>
@@ -110,7 +110,7 @@ const fetchTaskDetails = async () => {
         task.value = response.data;
         editedTask.title = task.value.title;
         editedTask.description = task.value.description
-        editedTask.due_date = task.value.due_date
+        editedTask.due_date = task.value.due_date.ymd
         editedTask.status = task.value.status.name
     } catch (error) {
         console.error('Error fetching task details:', error);
@@ -124,7 +124,7 @@ const startEditing = () => {
 const cancelEditing = () => {
     editedTask.title = task.value.title;
     editedTask.description = task.value.description
-    editedTask.due_date = task.value.due_date
+    editedTask.due_date = task.value.due_date.ymd
     editedTask.status = task.value.status.name
     editing.value = false;
 };

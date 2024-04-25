@@ -7,17 +7,24 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\TaskResource;
 use App\Http\Requests\Task\CreateTaskRequest;
 use App\Http\Requests\Task\UpdateTaskRequest;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
     public function index()
     {
-        return TaskResource::collection(auth()->user()->tasks()->get());
+        $tasks=Auth::user()->tasks()
+                    ->filter(request()->query('filters'))
+                    ->sort(request()->query('sort'))
+                    ->paginate(6)
+                    ->withQueryString();
+
+        return TaskResource::collection($tasks);
     }
 
     public function store(CreateTaskRequest $request)
     {
-        $task=auth()->user()->tasks()->create($request->validated());
+        $task=Auth::user()->tasks()->create($request->validated());
 
         return new TaskResource($task);
     }
@@ -29,7 +36,7 @@ class TaskController extends Controller
 
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        if(count($request->validated())) $task->update($request->validated());
+        $task->update($request->validated());
 
         return new TaskResource($task->fresh());
     }

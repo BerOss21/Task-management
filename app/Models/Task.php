@@ -5,9 +5,10 @@ namespace App\Models;
 use Spatie\ModelStates\HasStates;
 use App\States\Task\TaskStatusState;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Builder\TaskQueryBuilder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Task extends Model
 {
@@ -21,6 +22,11 @@ class Task extends Model
             'status' => TaskStatusState::class,
             'due_date'=>'datetime'
         ];
+    }
+
+    public function newEloquentBuilder($query): TaskQueryBuilder
+    {
+        return new TaskQueryBuilder($query);
     }
 
     public function user() :BelongsTo
