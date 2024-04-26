@@ -7,7 +7,7 @@
                     exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
             </div>
             <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-                <form class="card-body" @submit="login">
+                <form class="card-body" @submit.prevent="login">
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text" >Email</span>
@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { onMounted , reactive} from 'vue';
+import { reactive} from 'vue';
 import { useRouter } from 'vue-router';
 
 const router=useRouter();
@@ -40,18 +40,13 @@ const form=reactive({
     password:null
 })
 
-const logout=async()=>{
-    await axios.post('/logout',form);
-    localStorage.removeItem('user')
-}
+
 const login=async()=>{
     try {
         await axios.get('/sanctum/csrf-cookie');
         const response = await axios.post('/login',form);
         localStorage.setItem('user',response.data)
         router.push({name:'home'})
-        // const response = await axios.patch(`/api/tasks/${task.value.id}`, data);
-        console.log('user',response.data);
     } catch (error) {
         console.log('error',error);
     }

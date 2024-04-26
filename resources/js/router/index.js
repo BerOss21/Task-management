@@ -1,30 +1,65 @@
-import { createWebHistory, createRouter } from 'vue-router'
-
+import {
+    createWebHistory,
+    createRouter
+} from 'vue-router';
 import Home from '../views/Home.vue';
 import Show from '../views/Show.vue';
 import Login from '../views/Login.vue';
+import Register from '../views/Register.vue';
 
-const routes = [
-  { path: '/',name:'home', component: Home, 'meta':{requiredAuth:true} },
-  { path: '/tasks/:id',name:'detail', component: Show, 'meta':{requiredAuth:true} },
-  { path: '/signin',name:'login', component: Login, 'meta':{requiredAuth:false}},
-]
+const routes = [{
+        path: '/',
+        name: 'home',
+        component: Home,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/tasks/:id',
+        name: 'detail',
+        component: Show,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/signin',
+        name: 'login',
+        component: Login,
+        meta: {
+            requiresGuest: true
+        }
+    },
+    {
+      path: '/signup',
+      name: 'register',
+      component: Register,
+      meta: {
+          requiresGuest: true
+      }
+  },
+];
 
-const router=createRouter({
-  history:createWebHistory(),
-  routes
+const router = createRouter({
+    history: createWebHistory(),
+    routes
 });
 
 router.beforeEach((to, from, next) => {
-console.log(localStorage.getItem('user'))
+  const isAuthenticated = localStorage.getItem('user');
 
-  if (to.meta.requiredAuth && !localStorage.getItem('user')) {
-      next({name: 'login'});
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+      if (!isAuthenticated) next({name: 'login'});
+      else next();
   } 
 
-  else if (!to.meta.requiredAuth && localStorage.getItem('user')) {
-      next({name:'home'});
-  }
+  else if (to.matched.some(record => record.meta.requiresGuest)) {
+      if (isAuthenticated) next({name: 'home'});
+      else next();
+  } 
+
+  else next();
 });
 
 export default router;

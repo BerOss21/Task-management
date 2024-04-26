@@ -2,12 +2,6 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useTaskStore = defineStore('tasks', () => {
-    axios.interceptors.request.use(config => {
-        const token = '6|unLoosPc2dJcvBrbbNC5KVc4xa5xtbHC4bhQ7U5T3d58f5d0';
-        config.headers.Authorization = `Bearer ${token}`;
-        return config;
-    });
-    
     const task = ref(null);
     const tasks = ref([]);
     const total = ref(0);

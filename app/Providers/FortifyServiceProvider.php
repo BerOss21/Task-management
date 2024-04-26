@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Fortify\Contracts\LoginResponse;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Resources\UserResource;
+use Laravel\Fortify\Contracts\RegisterResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -28,6 +29,15 @@ class FortifyServiceProvider extends ServiceProvider
                 return new UserResource($request->user());
             }
         });
+
+        $this->app->instance(RegisterResponse::class, new class implements RegisterResponse {
+            public function toResponse($request)
+            {
+                return new UserResource($request->user());
+            }
+        });
+
+
     }
 
     /**
