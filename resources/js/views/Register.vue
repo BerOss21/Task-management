@@ -51,6 +51,14 @@
 import { reactive} from 'vue';
 import { useRouter } from 'vue-router';
 
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '../stores/user';
+
+const userStore = useUserStore();
+
+const { user }=storeToRefs(userStore);
+const { updateUser }=userStore;
+
 const router=useRouter();
 
 const form=reactive({
@@ -66,7 +74,8 @@ const register=async()=>{
     try {
         await axios.get('/sanctum/csrf-cookie');
         const response = await axios.post('/register',form);
-        localStorage.setItem('user',response.data)
+        localStorage.setItem('user',JSON.stringify(response.data))
+        updateUser()
         router.push({name:'home'})
     } catch (error) {
         console.log('error',error);

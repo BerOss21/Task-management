@@ -5,13 +5,13 @@
         </div>
         <div class="flex-none">
             <ul class="menu menu-horizontal px-1">
-                <li v-if="isAuthenticated"> <router-link :to="{name:'home'}">Tasks</router-link></li>
+                <li v-if="user"> <router-link :to="{name:'home'}">Tasks</router-link></li>
                 <template v-else>
                     <li> <router-link :to="{name:'login'}">Login</router-link></li>
                     <li> <router-link :to="{name:'register'}">Register</router-link></li>
                 </template>
             </ul>
-            <div class="dropdown dropdown-end" v-if="isAuthenticated">
+            <div class="dropdown dropdown-end" v-if="user">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                     <div class="w-10 rounded-full">
                         <img alt="Tailwind CSS Navbar component"
@@ -36,7 +36,13 @@
 <script setup>
     import { useRouter } from 'vue-router';
 
-    const isAuthenticated = localStorage.getItem('user');
+    import { storeToRefs } from 'pinia';
+    import { useUserStore } from '../stores/user';
+
+    const userStore = useUserStore();
+    const { user }=storeToRefs(userStore);
+    const { updateUser }=userStore;
+
     const router=useRouter();
 
     const logout=async()=>{
@@ -44,6 +50,7 @@
         {
             await axios.post('/logout');
             localStorage.removeItem('user');
+            updateUser();
             router.push({name:'login'});
         }
         catch(error)

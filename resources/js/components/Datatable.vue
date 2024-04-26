@@ -1,6 +1,6 @@
 <template>
     <div class="overflow-x-auto">
-        <table class="table" v-if="total">
+        <table class="table" v-if="tasks.length">
             <thead>
                 <tr>
                     <th class="cursor-pointer" @click="sortBy('title')">Title <span v-if="sort.field === 'title'"><i
@@ -25,6 +25,9 @@
                 </tr>
             </tbody>
         </table>
+        <div class="bg-neutral-100 text-center rounded-lg w-full p-3" v-else>
+            No tasks found
+        </div>
     </div>
 </template>
 
