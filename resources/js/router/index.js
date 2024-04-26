@@ -2,8 +2,10 @@ import {
     createWebHistory,
     createRouter
 } from 'vue-router';
+
 import Home from '../views/Home.vue';
 import Show from '../views/Show.vue';
+import Create from '../views/Create.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 
@@ -24,6 +26,14 @@ const routes = [{
         }
     },
     {
+        path: '/tasks/create',
+        name: 'create',
+        component: Create,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
         path: '/signin',
         name: 'login',
         component: Login,
@@ -32,13 +42,13 @@ const routes = [{
         }
     },
     {
-      path: '/signup',
-      name: 'register',
-      component: Register,
-      meta: {
-          requiresGuest: true
-      }
-  },
+        path: '/signup',
+        name: 'register',
+        component: Register,
+        meta: {
+            requiresGuest: true
+        }
+    },
 ];
 
 const router = createRouter({
@@ -47,19 +57,19 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('user');
+    const isAuthenticated = localStorage.getItem('user');
 
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-      if (!isAuthenticated) next({name: 'login'});
-      else next();
-  } 
-
-  else if (to.matched.some(record => record.meta.requiresGuest)) {
-      if (isAuthenticated) next({name: 'home'});
-      else next();
-  } 
-
-  else next();
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (!isAuthenticated) next({
+            name: 'login'
+        });
+        else next();
+    } else if (to.matched.some(record => record.meta.requiresGuest)) {
+        if (isAuthenticated) next({
+            name: 'home'
+        });
+        else next();
+    } else next();
 });
 
 export default router;

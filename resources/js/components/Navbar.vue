@@ -5,7 +5,11 @@
         </div>
         <div class="flex-none">
             <ul class="menu menu-horizontal px-1">
-                <li v-if="user"> <router-link :to="{name:'home'}">Tasks</router-link></li>
+                <template v-if="user">
+                    <li> <router-link  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1" :to="{name:'home'}">My Tasks</router-link></li>
+                    <li> <router-link  class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" :to="{name:'create'}">New Task</router-link></li>
+                </template>
+                
                 <template v-else>
                     <li> <router-link :to="{name:'login'}">Login</router-link></li>
                     <li> <router-link :to="{name:'register'}">Register</router-link></li>

@@ -15,6 +15,7 @@ class TaskController extends Controller
     {
         $tasks=Auth::user()->tasks()
                     ->filter(request()->query('filters'))
+                    ->orderBy('created_at','desc')
                     ->sort(request()->query('sort'))
                     ->paginate(6)
                     ->withQueryString();
