@@ -56,6 +56,5 @@ const { sort, filters } = filterStore;
 
 watch(filters, debounce(async () => {
     await getTasks(route('tasks.index'), { sort, filters })
-}, 500)
-)
+}, 500))
 </script>

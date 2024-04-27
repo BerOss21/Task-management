@@ -35,7 +35,6 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import Sidebar from '../components/Sidebar.vue';
 import ApiDoc from '../components/ApiDoc.vue';
 
 const loading = ref(false);

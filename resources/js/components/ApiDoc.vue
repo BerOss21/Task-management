@@ -29,7 +29,16 @@
             <div class="mb-8 border rounded-lg ">
                 <h2 class="text-lg font-semibold mb-4">Get Tasks</h2>
                 <p><span class="font-semibold">Method:</span> GET</p>
-                <p><span class="font-semibold">URL:</span> http://localhost:8989/api/tasks?page=2</p>
+                <p><span class="font-semibold">URL:</span> http://localhost:8989/api/tasks</p>
+                <p class="font-semibold">Parameters:</p>
+                <ul class="list-disc pl-6">
+                    <li>page</li>
+                    <li>filters[status]</li>
+                    <li>filters[due_date]</li>
+                    <li>filters[title]</li>
+                    <li>sort[title]</li>
+                    <li>sort[due_date]</li>
+                </ul>
                 <p class="font-semibold">Authentication:</p>
                 <p>Bearer Token</p>
             </div>
