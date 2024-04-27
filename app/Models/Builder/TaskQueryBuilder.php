@@ -34,6 +34,8 @@ class TaskQueryBuilder extends Builder
             $query->orderBy('title',$value);
         })->when($sort['due_date'],function(Builder $query,$value){
             $query->orderBy('due_date',$value);
+        },function (Builder $query) {
+            $query->orderBy('created_at','desc');
         });
     }
 }

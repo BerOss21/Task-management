@@ -2,7 +2,6 @@
     <div class="flex flex-col md:grid md:grid-cols-4 p-3 gap-1 max-h-72">
         <Sidebar class="col-span-1" />
         <div class="bg-neutral-100 w-auto rounded-lg p-4 flex justify-center items-center col-span-3">
-
             <div class="text-center rounded-lg w-full p-3" v-if="loading">
                 <div colspan="5" class="text-center">
                     <span class="loading loading-dots loading-lg"></span>
@@ -23,7 +22,6 @@
                     </button>
                 </div>
             </div>
-
         </div>
     </div>
 

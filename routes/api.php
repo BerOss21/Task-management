@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\StatisticController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 
 Route::middleware('guest:sanctum')->group(function(){
@@ -12,6 +13,8 @@ Route::middleware('guest:sanctum')->group(function(){
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::get('user',[AuthController::class,'user'])->name('user');
+
+    Route::get('statistics',StatisticController::class)->name('statistics');
    
     Route::get('tokens',[AuthController::class,'tokens'])->name('tokens');
     Route::post('tokens',[AuthController::class,'generateToken']);

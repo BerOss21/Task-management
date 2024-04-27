@@ -1,5 +1,5 @@
 <template>
-     <div class="navbar bg-base-300">
+     <div class="navbar bg-base-300 flex flex-col md:flex-row">
         <div class="flex-1">
             <a class="btn btn-ghost text-xl">Task Management</a>
         </div>

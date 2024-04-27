@@ -56,7 +56,12 @@
                             </div>
                         </div>
                         <div class="flex justify-end mt-4">
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create</button>
+                            <button :disabled="loading" type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <div class="flex gap-1">
+                                    <span v-if="loading" class="loading loading-dots"></span>
+                                    <span>Create</span>
+                                </div>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -78,6 +83,8 @@ const router = useRouter();
 
 import Sidebar from '../components/Sidebar.vue';
 
+const loading=ref(false);
+
 const form = useForm('post', '/api/tasks', {
     title: null,
     description: null,
@@ -90,11 +97,20 @@ const createTask= async () => {
     {
         errors.value={}
 
+        loading.value=true;
+
         try {
             await form.submit();
             router.push({name:'home'})
-        } catch (error) {
+        } 
+        
+        catch (error) {
             console.error('Error creating task:', error);
+        }
+
+        finally
+        {
+            loading.value=false;
         }
     }
 };
