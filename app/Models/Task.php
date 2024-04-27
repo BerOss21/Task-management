@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\TaskScope;
 use Spatie\ModelStates\HasStates;
 use App\States\Task\TaskStatusState;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +23,11 @@ class Task extends Model
             'status' => TaskStatusState::class,
             'due_date'=>'datetime'
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new TaskScope);
     }
 
     public function newEloquentBuilder($query): TaskQueryBuilder

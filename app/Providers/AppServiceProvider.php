@@ -28,9 +28,9 @@ class AppServiceProvider extends ServiceProvider
     {
         JsonResource::withoutWrapping();
         
-        Route::bind('task', function (string $value) {
-            return Auth::user()->tasks()->where('id', $value)->firstOrFail();
-        });
+        // Route::bind('task', function (string $value) {
+        //     return Auth::user()->tasks()->where('id', $value)->firstOrFail();
+        // });
 
         Gate::policy(Task::class, TaskPolicy::class);
     }

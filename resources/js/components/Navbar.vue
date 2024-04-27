@@ -6,9 +6,10 @@
         <div class="flex-none">
             <ul class="menu menu-horizontal px-1">
                 <template v-if="user">
-                    <li> <router-link  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1" :to="{name:'home'}">My Tasks</router-link></li>
-                    <li> <router-link  class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-1" :to="{name:'create'}">New Task</router-link></li>
-                    <li> <router-link  class="bg-neutral-500 hover:bg-neutral-700 text-white font-bold py-2 px-4 rounded" :to="{name:'tokens'}">Tokens</router-link></li>
+                    <li> <router-link  class="bg-neutral-500 hover:bg-neutral-700 text-white font-bold py-2 px-4 rounded mr-1" :to="{name:'home'}">My Tasks</router-link></li>
+                    <li> <router-link  class="bg-neutral-500 hover:bg-neutral-700 text-white font-bold py-2 px-4 rounded mr-1" :to="{name:'create'}">New Task</router-link></li>
+                    <li> <router-link  class="bg-neutral-500 hover:bg-neutral-700 text-white font-bold py-2 px-4 rounded mr-1" :to="{name:'tokens'}">Api</router-link></li>
+                    <li><a class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-1" @click="logout">Logout</a></li>
                 </template>
                 
                 <template v-else>
@@ -16,24 +17,7 @@
                     <li> <router-link :to="{name:'register'}">Register</router-link></li>
                 </template>
             </ul>
-            <div class="dropdown dropdown-end" v-if="user">
-                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                    <div class="w-10 rounded-full">
-                        <img alt="Tailwind CSS Navbar component"
-                            src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                    </div>
-                </div>
-                <ul tabindex="0"
-                    class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                    <li>
-                        <a class="justify-between">
-                            Profile
-                        </a>
-                    </li>
-                    <li><a>Settings</a></li>
-                    <li><a @click="logout">Logout</a></li>
-                </ul>
-            </div>
+          
         </div>
     </div>
 </template>

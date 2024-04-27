@@ -1,10 +1,8 @@
 <template>
-    <div class="hero min-h-screen bg-base-200">
+    <div class="hero min-h-screen bg-base-200 md:col-span-4">
         <div class="hero-content flex-col lg:flex-row-reverse">
             <div class="text-center lg:text-left">
                 <h1 class="text-5xl font-bold">Register now!</h1>
-                <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi
-                    exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
             </div>
             <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
                 <form class="card-body" @submit.prevent="register">
@@ -60,7 +58,7 @@
                         <label class="label">
                             <span class="label-text">Password confirmation</span>
                         </label>
-                        <input v-model="form.password_confirmation" type="Password confirmation" placeholder="password" class="input input-bordered"/>
+                        <input v-model="form.password_confirmation" type="password" placeholder="Password confirmation"  class="input input-bordered"/>
                         <div class="text-red-600" v-if="errors.password_confirmation">
                             {{ errors.password_confirmation }}
                         </div>
@@ -97,7 +95,7 @@ const { updateUser }=userStore;
 
 const router=useRouter();
 
-const form=useForm('/register','post',{
+const form=useForm('post','/register',{
     firstname:null,
     lastname:null,
     email:null,
@@ -106,6 +104,8 @@ const form=useForm('/register','post',{
 })
 
 const register=async()=>{
+    console.log('errrrrrr',errors.value);
+
     if(validateRegisterForm(form))
     {
         errors.value={};

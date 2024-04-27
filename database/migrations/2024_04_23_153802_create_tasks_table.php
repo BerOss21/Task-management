@@ -1,5 +1,6 @@
 <?php
 
+use App\States\Task\TaskInProgress;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->text('description')->nullable();
             $table->date('due_date');
-            $table->string('status')->default('in_progress');
+            $table->string('status')->default(TaskInProgress::$name);
             $table->timestamps();
         });
     }

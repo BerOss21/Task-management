@@ -3,53 +3,42 @@
         <div class="py-3 px-6 rounded-lg bg-gray-400 text-black hover:shadow-lg">
             <div class="flex flex-col gap-3">
                 <h3 class="text-lg font-bold text-black">Total</h3>
-                <span class="loading loading-dots loading-lg" v-if="loading"></span>
-                <p v-else>{{ statistics.total }} Tasks</p>
+                <span class="loading loading-dots loading-lg" v-if="loading_statistics"></span>
+                <p v-else-if="statistics.total">{{ statistics.total }} Tasks</p>
+                <p v-else="statistics.total">0 Tasks</p>
             </div>
         </div>
         <div class="py-3 px-6 rounded-lg bg-orange-400 text-black hover:shadow-lg">
             <div class="flex flex-col gap-3">
-                <h3 class="text-lg font-bold text-black">Completed</h3>
-                <span class="loading loading-dots loading-lg" v-if="loading"></span>
-                <p v-else>{{ statistics.completed }} Tasks</p>
+                <h3 class="text-lg font-bold text-black">In progress</h3>
+                <span class="loading loading-dots loading-lg" v-if="loading_statistics"></span>
+                <p v-else-if="statistics.in_progress">{{ statistics.in_progress }} Tasks</p>
+                <p v-else="statistics.total">0 Tasks</p>
             </div>
         </div>
         <div class="py-3 px-6 rounded-lg bg-green-400 text-black hover:shadow-lg">
             <div class="flex flex-col gap-3">
-                <h3 class="text-lg font-bold text-black">In progress</h3>
-                <span class="loading loading-dots loading-lg" v-if="loading"></span>
-                <p v-else>{{ statistics.in_progress }} Tasks</p>
+                <h3 class="text-lg font-bold text-black">Completed</h3>
+                <span class="loading loading-dots loading-lg" v-if="loading_statistics"></span>
+                <p v-else-if="statistics.completed">{{ statistics.completed }} Tasks</p>
+                <p v-else="statistics.total">0 Tasks</p>
             </div>
         </div>
-     
     </div>
 </template>
 
 <script setup>
-    import {reactive, ref, onMounted} from 'vue';
+    import {onMounted} from 'vue';
 
-    const loading=ref(false);
+    import { useStatisticStore } from '../stores/statistics';
 
-    const statistics=reactive({
-        total:null,
-        completed:null,
-        in_progress:null
-    });
+    import {storeToRefs} from 'pinia';
 
-    onMounted(async()=>{
-        loading.value=true;
+    const store=useStatisticStore();
 
-        try{
-            const response=await axios.get('/api/statistics');
-            statistics.total=response.data.total;
-            statistics.completed=response.data.completed;
-            statistics.in_progress=response.data.in_progress;
-        }
-        catch(error){
-            console.error('Error:', error);
-        }
-        finally{
-            loading.value=false
-        }
-    })
+    const {statistics,loading_statistics} = storeToRefs(store);
+    const { getStatistics } = store;
+
+
+    onMounted(() => getStatistics() )
 </script>
