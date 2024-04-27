@@ -7,7 +7,13 @@
                     <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
                         <div class="px-4 py-5 sm:px-6">
                             <template v-if="editing">
-                                <input v-model="editedTask.title" class="w-full border rounded px-3 py-2">
+                                <input v-model="form.title" class="w-full border rounded px-3 py-2">
+                                <div class="text-red-600" v-if="errors.title">
+                                        {{ errors.title }}
+                                </div>
+                                <div class="text-red-600" v-else-if="form.invalid('title')">
+                                    {{ form.errors.title }}
+                                </div>
                             </template>
 
                             <template v-else>
@@ -15,8 +21,15 @@
                             </template>
 
                             <template v-if="editing">
-                                <textarea v-model="editedTask.description"
+                                <textarea v-model="form.description"
+                                placeholder="Description"
                                     class="w-full border rounded px-3 py-2 mt-2"></textarea>
+                                <div class="text-red-600" v-if="errors.description">
+                                    {{ errors.description }}
+                                </div>
+                                <div class="text-red-600" v-else-if="form.invalid('description')">
+                                    {{ form.errors.description }}
+                                </div>
                             </template>
 
                             <template v-else>
@@ -30,11 +43,17 @@
                                     <template v-if="editing">
                                         <label for="status"
                                             class="block text-sm font-medium text-gray-700">Status</label>
-                                        <select v-model="editedTask.status" id="status"
+                                        <select v-model="form.status" id="status"
                                             class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                                             <option value="completed">Completed</option>
                                             <option value="in progress">In Progress</option>
                                         </select>
+                                        <div class="text-red-600" v-if="errors.status">
+                                            {{ errors.status }}
+                                        </div>
+                                        <div class="text-red-600" v-else-if="form.invalid('status')">
+                                            {{ form.errors.status }}
+                                        </div>
                                     </template>
 
                                     <template v-else>
@@ -47,8 +66,14 @@
                                     <template v-if="editing">
                                         <label for="dueDate" class="block text-sm font-medium text-gray-700">Due
                                             Date</label>
-                                        <input v-model="editedTask.due_date" type="date" id="dueDate"
+                                        <input v-model="form.due_date" type="date" id="dueDate"
                                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                            <div class="text-red-600" v-if="errors.due_date">
+                                                {{ errors.due_date }}
+                                            </div>
+                                            <div  class="text-red-600" v-else-if="form.invalid('due_date')">
+                                                {{ form.errors.due_date }}
+                                            </div>
                                     </template>
 
                                     <template v-else>
@@ -76,53 +101,65 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted} from 'vue';
 import { useRoute } from 'vue-router';
-import { storeToRefs } from 'pinia';
-import { useTaskStore } from '../stores/tasks';
+import { useForm } from 'laravel-precognition-vue';
 import Sidebar from '../components/Sidebar.vue';
+import useValidation from "../services/validation";
+
+const {errors, validateEditForm} = useValidation();
 
 const route = useRoute();
 
-const store = useTaskStore();
+const task = ref(null);
 
-const { task } = storeToRefs(store);
-
-const { getSingleTask, updateTask } = store;
-
-const editedTask = reactive({
+const form = useForm('patch', `/api/tasks/${route.params.id}`, {
     title: null,
     description: null,
-    due_date: null,
-    status: null
+    status: null,
+    due_date: null
 });
 
 const editing = ref(false);
 
-onMounted(() => fetchTaskDetails());
-
-const fetchTaskDetails = async () => {
-    await getSingleTask(route.params.id);
-};
+onMounted(async () => {
+    try {
+        const response = await axios.get(`/api/tasks/${route.params.id}`);
+        task.value = response.data;
+    } catch (error) {
+        console.error('Error fetching task details:', error);
+    }
+});
 
 const startEditing = () => {
-    editedTask.title = task.value.title;
-    editedTask.description = task.value.description
-    editedTask.due_date = task.value.due_date.ymd
-    editedTask.status = task.value.status.name
+    form.title = task.value.title;
+    form.description = task.value.description
+    form.due_date = task.value.due_date.ymd
+    form.status = task.value.status.name
     editing.value = true
 };
 
 const cancelEditing = () => {
-    editedTask.title = task.value.title;
-    editedTask.description = task.value.description
-    editedTask.due_date = task.value.due_date.ymd
-    editedTask.status = task.value.status.name
+    form.title = task.value.title;
+    form.description = task.value.description
+    form.due_date = task.value.due_date.ymd
+    form.status = task.value.status.name
     editing.value = false;
+    errors.value={};
 };
 
 const submitChanges = async () => {
-    await updateTask(editedTask);
-    editing.value = false;
+    if(validateEditForm(form))
+    {
+        errors.value={}
+
+        try {
+            const response= await form.submit();
+            editing.value = false;
+            task.value =response.data;
+        } catch (error) {
+            console.error('Error creating task:', error);
+        }
+    }
 };
 </script>

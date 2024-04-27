@@ -2,12 +2,17 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useTaskStore = defineStore('tasks', () => {
-    const task = ref(null);
+    // const task = ref(null);
     const tasks = ref([]);
     const total = ref(0);
     const links = ref([]);
 
     const getTasks = async (url, params= {}) => {
+
+        tasks.value=[];
+        const total = ref(0);
+        const links = ref([]);
+
         try {
             const response = await axios.get(url, { params });
             tasks.value = response.data.data;
@@ -19,14 +24,14 @@ export const useTaskStore = defineStore('tasks', () => {
         }
     }
 
-    const getSingleTask=async (taskId ) => {
-        try {
-            const response = await axios.get(`/api/tasks/${taskId}`);
-            task.value = response.data;
-        } catch (error) {
-            console.error('Error fetching task details:', error);
-        }
-    };
+    // const getSingleTask=async (taskId ) => {        
+    //     try {
+    //         const response = await axios.get(`/api/tasks/${taskId}`);
+    //         task.value = response.data;
+    //     } catch (error) {
+    //         console.error('Error fetching task details:', error);
+    //     }
+    // };
 
     const updateTask=async (data) => {
         try {
@@ -46,12 +51,12 @@ export const useTaskStore = defineStore('tasks', () => {
     };
     
     return {
-        task,
+        // task,
         tasks,
         total,
         links,
         getTasks,
-        getSingleTask,
+        // getSingleTask,
         updateTask,
         deleteTask
     }

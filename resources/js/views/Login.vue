@@ -13,12 +13,24 @@
                             <span class="label-text" >Email</span>
                         </label>
                         <input type="email" v-model="form.email" placeholder="email" class="input input-bordered"/>
+                        <div class="text-red-600" v-if="errors.email">
+                            {{ errors.email }}
+                        </div>
+                        <div class="text-red-600" v-else-if="form.invalid('email')">
+                            {{ form.errors.email }}
+                        </div>
                     </div>
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text">Password</span>
                         </label>
                         <input v-model="form.password" type="password" placeholder="password" class="input input-bordered"/>
+                        <div class="text-red-600" v-if="errors.password">
+                            {{ errors.password }}
+                        </div>
+                        <div class="text-red-600" v-else-if="form.invalid('password')">
+                            {{ form.errors.password }}
+                        </div>
                     </div>
                     <div class="form-control mt-6">
                         <button class="btn btn-primary">Login</button>
@@ -30,34 +42,44 @@
 </template>
 
 <script setup>
-import { reactive} from 'vue';
+import { reactive, ref} from 'vue';
 import { useRouter } from 'vue-router';
 
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '../stores/user';
 
+import useValidation from "../services/validation";
+
+const {errors, validateLoginForm} = useValidation();
+
 const userStore = useUserStore();
 const { user }=storeToRefs(userStore);
 const { updateUser }=userStore;
+import { useForm } from 'laravel-precognition-vue';
 
 const router=useRouter();
 
-const form=reactive({
+const form=useForm('post','/login',{
     email:null,
     password:null
 })
 
-
 const login=async()=>{
-    try {
-        await axios.get('/sanctum/csrf-cookie');
-        const response = await axios.post('/login',form);
-        localStorage.setItem('user',JSON.stringify(response.data));
-        updateUser();
-        router.push({name:'home'})
-    } catch (error) {
-        console.log('error',error);
+    if(validateLoginForm(form))
+    {
+        errors.value={};
+
+        try {
+            await axios.get('/sanctum/csrf-cookie');
+            const response = await form.submit();
+            localStorage.setItem('user',JSON.stringify(response.data));
+            updateUser();
+            router.push({name:'home'})
+        } catch (error) {
+            console.log('error',error);
+        }
     }
+    
 }
 </script>
 

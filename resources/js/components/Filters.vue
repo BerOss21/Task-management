@@ -19,13 +19,10 @@
     import { useTaskStore } from '../stores/tasks';
     import { useFilterStore } from '../stores/filters';
     import { debounce } from 'lodash';
-    // import { storeToRefs } from 'pinia';
 
     const taskStore = useTaskStore();
 
     const filterStore = useFilterStore();
-
-    // const {sort,filters}=storeToRefs(filterStore);
 
     const { getTasks } = taskStore;
     const { sort,filters } = filterStore;

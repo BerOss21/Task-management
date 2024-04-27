@@ -3,10 +3,10 @@
         <table class="table" v-if="tasks.length">
             <thead>
                 <tr>
-                    <th class="cursor-pointer" @click="sortBy('title')">Title <span v-if="sort.field === 'title'"><i
+                    <th class="cursor-pointer" @click="sortBy('title')">Title<span v-if="sort.field === 'title'"><i
                                 class="fas fa-sort-{{ sort.direction }}"></i></span></th>
                     <th>Description</th>
-                    <th @click="sortBy('due_date')">Due date <span v-if="sort.field === 'due_date'"><i
+                    <th class="cursor-pointer" @click="sortBy('due_date')">Due date <span v-if="sort.field === 'due_date'"><i
                                 class="fas fa-sort-{{ sort.direction }}"></i></span></th>
                     <th>Status</th>
                     <th></th>
@@ -46,7 +46,7 @@
 
   const { getTasks } = taskStore;
 
-  onMounted(async () => await getTasks('/api/tasks'));
+  onMounted(async () => await getTasks('/api/tasks',{ sort:sort.value, filters:filters.value }));
   
   const sortBy = (field) => sort.value[field] = sort.value[field] === 'desc' ? 'asc' : 'desc';
 

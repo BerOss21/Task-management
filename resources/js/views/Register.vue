@@ -13,30 +13,60 @@
                             <span class="label-text" >First name</span>
                         </label>
                         <input type="firstname" v-model="form.firstname" placeholder="First name" class="input input-bordered"/>
+                        <div class="text-red-600" v-if="errors.firstname">
+                            {{ errors.firstname }}
+                        </div>
+                        <div class="text-red-600" v-else-if="form.invalid('firstname')">
+                            {{ form.errors.firstname }}
+                        </div>
                     </div>
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text" >Last name</span>
                         </label>
                         <input type="lastname" v-model="form.lastname" placeholder="Last name" class="input input-bordered"/>
+                        <div class="text-red-600" v-if="errors.lastname">
+                            {{ errors.lastname }}
+                        </div>
+                        <div class="text-red-600" v-else-if="form.invalid('lastname')">
+                            {{ form.errors.lastname }}
+                        </div>
                     </div>
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text" >Email</span>
                         </label>
                         <input type="email" v-model="form.email" placeholder="Email" class="input input-bordered"/>
+                        <div class="text-red-600" v-if="errors.email">
+                            {{ errors.email }}
+                        </div>
+                        <div class="text-red-600" v-else-if="form.invalid('email')">
+                            {{ form.errors.email }}
+                        </div>
                     </div>
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text">Password</span>
                         </label>
                         <input v-model="form.password" type="password" placeholder="Password" class="input input-bordered"/>
+                        <div class="text-red-600" v-if="errors.password">
+                            {{ errors.password }}
+                        </div>
+                        <div class="text-red-600" v-else-if="form.invalid('password')">
+                            {{ form.errors.password }}
+                        </div>
                     </div>
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text">Password confirmation</span>
                         </label>
                         <input v-model="form.password_confirmation" type="Password confirmation" placeholder="password" class="input input-bordered"/>
+                        <div class="text-red-600" v-if="errors.password_confirmation">
+                            {{ errors.password_confirmation }}
+                        </div>
+                        <div class="text-red-600" v-else-if="form.invalid('password_confirmation')">
+                            {{ form.errors.password_confirmation }}
+                        </div>
                     </div>
                     <div class="form-control mt-6">
                         <button class="btn btn-primary">register</button>
@@ -48,11 +78,17 @@
 </template>
 
 <script setup>
-import { reactive} from 'vue';
+import { reactive, ref} from 'vue';
 import { useRouter } from 'vue-router';
 
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '../stores/user';
+
+import { useForm } from 'laravel-precognition-vue';
+
+import useValidation from "../services/validation";
+
+const {errors, validateRegisterForm} = useValidation();
 
 const userStore = useUserStore();
 
@@ -61,7 +97,7 @@ const { updateUser }=userStore;
 
 const router=useRouter();
 
-const form=reactive({
+const form=useForm('/register','post',{
     firstname:null,
     lastname:null,
     email:null,
@@ -69,17 +105,22 @@ const form=reactive({
     password_confirmation:null
 })
 
-
 const register=async()=>{
-    try {
-        await axios.get('/sanctum/csrf-cookie');
-        const response = await axios.post('/register',form);
-        localStorage.setItem('user',JSON.stringify(response.data))
-        updateUser()
-        router.push({name:'home'})
-    } catch (error) {
-        console.log('error',error);
+    if(validateRegisterForm(form))
+    {
+        errors.value={};
+
+        try {
+            await axios.get('/sanctum/csrf-cookie');
+            const response = await form.submit();
+            localStorage.setItem('user',JSON.stringify(response.data));
+            updateUser();
+            router.push({name:'home'});
+        } catch (error) {
+            console.log('error',error);
+        }
     }
+    
 }
 </script>
 
