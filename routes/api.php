@@ -13,6 +13,9 @@ Route::middleware('guest:sanctum')->group(function(){
 Route::middleware('auth:sanctum')->group(function(){
     Route::get('user',[AuthController::class,'user'])->name('user');
    
+    Route::get('tokens',[AuthController::class,'tokens'])->name('tokens');
+    Route::post('tokens',[AuthController::class,'generateToken']);
+   
     Route::get('tasks', [TaskController::class, 'index'])
         ->name('tasks.index')
         ->middleware(['can:viewAny,App\Models\Task',HandlePrecognitiveRequests::class]);
@@ -27,11 +30,11 @@ Route::middleware('auth:sanctum')->group(function(){
     
     Route::match(['patch','put'],'tasks/{task}', [TaskController::class, 'update'])
         ->name('tasks.update')
-        ->middleware('can:update,task');;
+        ->middleware('can:update,task');
 
     Route::delete('tasks/{task}', [TaskController::class, 'destroy'])
         ->name('tasks.destroy')
-        ->middleware('can:delete,task');;
+        ->middleware('can:delete,task');
     
 });
 

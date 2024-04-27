@@ -8,6 +8,7 @@ import Show from '../views/Show.vue';
 import Create from '../views/Create.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
+import Tokens from '../views/Tokens.vue';
 
 const routes = [{
         path: '/',
@@ -47,6 +48,14 @@ const routes = [{
         component: Register,
         meta: {
             requiresGuest: true
+        }
+    },
+    {
+        path: '/api',
+        name: 'tokens',
+        component: Tokens,
+        meta: {
+            requiresAuth: true
         }
     },
 ];

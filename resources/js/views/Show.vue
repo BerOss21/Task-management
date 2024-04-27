@@ -35,9 +35,9 @@
                                 </div>
                             </template>
 
-                            <template v-else>
+                            <div class="h-28 overflow-auto border mt-2 rounded-lg p-1" v-else>
                                 <p class="mt-1 max-w-2xl text-sm text-gray-500">{{ task.description }}</p>
-                            </template>
+                            </div>
                         </div>
                         <div class="px-4 py-5 sm:px-6">
                             <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
