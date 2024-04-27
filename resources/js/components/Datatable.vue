@@ -1,33 +1,39 @@
 <template>
     <div class="overflow-x-auto">
-        <table class="table" v-if="tasks.length">
+        <table class="table">
             <thead>
                 <tr>
-                    <th class="cursor-pointer" @click="sortBy('title')">Title<span v-if="sort.field === 'title'"><i
-                                class="fas fa-sort-{{ sort.direction }}"></i></span></th>
+                    <th>Title</th>
                     <th>Description</th>
-                    <th class="cursor-pointer" @click="sortBy('due_date')">Due date <span v-if="sort.field === 'due_date'"><i
-                                class="fas fa-sort-{{ sort.direction }}"></i></span></th>
+                    <th>Due date</th>
                     <th>Status</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(row, index) in tasks" :key="index" class="hover">
-                    <td>{{ row.title }}</td>
-                    <td>{{ row.description_preview }}</td>
-                    <td>{{ row.due_date.dmy }}</td>
-                    <td>{{ row.status.name }}</td>
-                    <td>
-                        <router-link :to="{ name: 'detail', params: { id: row.id } }"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Detail</router-link>
+                <tr class="bg-neutral-100 text-center rounded-lg w-full p-3" v-if="loading">
+                    <td colspan="5" class="text-center">
+                        <span class="loading loading-dots loading-lg"></span>
                     </td>
                 </tr>
-            </tbody>
+                <template v-else-if="tasks.length">
+                    <tr v-for="(row, index) in tasks" :key="index" class="hover">
+                        <td>{{ row.title }}</td>
+                        <td>{{ row.description_preview }}</td>
+                        <td>{{ row.due_date.dmy }}</td>
+                        <td>{{ row.status.name }}</td>
+                        <td class="flex gap-1">
+                            <router-link :to="{ name: 'detail', params: { id: row.id } }"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Show</router-link>
+                            <button @click="removeTask(row.id)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                        </td>
+                    </tr>
+                </template>
+                <tr class="bg-neutral-100 text-center rounded-lg w-full p-3" v-else>
+                    <td colspan="5" class="text-center">No tasks found</td>
+                </tr>
+            </tbody>  
         </table>
-        <div class="bg-neutral-100 text-center rounded-lg w-full p-3" v-else>
-            No tasks found
-        </div>
     </div>
 </template>
 
@@ -36,20 +42,25 @@
   import { storeToRefs } from 'pinia';
   import { useTaskStore } from '../stores/tasks';
   import { useFilterStore } from '../stores/filters';
-  import { debounce } from 'lodash';
+  import { debounce, filter } from 'lodash';
 
   const taskStore = useTaskStore();
   const filterStore = useFilterStore();
 
-  const { tasks,total } = storeToRefs(taskStore);
+  const { tasks, loading } = storeToRefs(taskStore);
   const { sort, filters } = storeToRefs(filterStore);
 
-  const { getTasks } = taskStore;
+  const { getTasks, deleteTask } = taskStore;
+
+  const removeTask=(id)=>{
+    if(confirm('Delete this task ?'))
+    {
+        deleteTask(id, sort.value, filters.value);
+    }
+  }
 
   onMounted(async () => await getTasks('/api/tasks',{ sort:sort.value, filters:filters.value }));
   
-  const sortBy = (field) => sort.value[field] = sort.value[field] === 'desc' ? 'asc' : 'desc';
-
   watch(()=>sort, debounce(() => { getTasks('/api/tasks', { sort:sort.value, filters:filters.value }) }, 500),{deep:true})
 
 </script>

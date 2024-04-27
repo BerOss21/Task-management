@@ -6,12 +6,11 @@ export const useTaskStore = defineStore('tasks', () => {
     const tasks = ref([]);
     const total = ref(0);
     const links = ref([]);
+    const loading=ref(false);
 
     const getTasks = async (url, params= {}) => {
 
-        tasks.value=[];
-        const total = ref(0);
-        const links = ref([]);
+        loading.value=true;
 
         try {
             const response = await axios.get(url, { params });
@@ -21,6 +20,9 @@ export const useTaskStore = defineStore('tasks', () => {
         } 
         catch (error) {
             console.error('Error fetching data:', error);
+        }
+        finally{
+            loading.value=false
         }
     }
 
@@ -33,20 +35,27 @@ export const useTaskStore = defineStore('tasks', () => {
     //     }
     // };
 
-    const updateTask=async (data) => {
+    // const updateTask=async (data) => {
+    //     try {
+    //         const response = await axios.patch(`/api/tasks/${task.value.id}`, data);
+    //         task.value =response.data;
+    //     } catch (error) {
+    //         console.error('Error updating task:', error);
+    //     }
+    // };
+
+    const deleteTask=async (taskId,sort, filters) => {   
+        loading.value=true;
+
         try {
-            const response = await axios.patch(`/api/tasks/${task.value.id}`, data);
-            task.value =response.data;
-        } catch (error) {
+            await axios.delete(`/api/tasks/${taskId}`);
+            await getTasks('/api/tasks',{ sort:sort, filters:filters });
+        } 
+        catch (error) {
             console.error('Error updating task:', error);
         }
-    };
-
-    const deleteTask=async (taskId) => {
-        try {
-            const response = await axios.delete(`/api/tasks/${taskId}`);
-        } catch (error) {
-            console.error('Error updating task:', error);
+        finally{
+            loading.value=false
         }
     };
     
@@ -55,9 +64,10 @@ export const useTaskStore = defineStore('tasks', () => {
         tasks,
         total,
         links,
+        loading,
         getTasks,
         // getSingleTask,
-        updateTask,
+        // updateTask,
         deleteTask
     }
 })

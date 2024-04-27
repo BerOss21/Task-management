@@ -1,8 +1,11 @@
 <template>
     <div class="flex flex-col md:grid md:grid-cols-4 p-3 gap-1 max-h-72">
         <Sidebar class="col-span-1" />
-        <div v-if="task" class="bg-base-100 md:col-span-3 w-full rounded-lg p-4">
-            <div class="overflow-x-auto">
+        <div class="bg-base-100 md:col-span-3 w-full rounded-lg p-4">
+            <div v-if="loading" class="h-full p-5 rounded-lg bg-neutral-100 flex justify-center items-center">
+                <span class="loading loading-dots loading-lg"></span>
+            </div>
+            <div class="overflow-x-auto" v-else-if="task">
                 <div class="flex flex-col">
                     <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
                         <div class="px-4 py-5 sm:px-6">
@@ -96,6 +99,9 @@
                     </div>
                 </div>
             </div>
+            <div v-else class="h-full p-5 rounded-lg bg-neutral-100 flex justify-center items-center">
+                <p>task not avaible</p>
+            </div>
         </div>
     </div>
 </template>
@@ -113,6 +119,8 @@ const route = useRoute();
 
 const task = ref(null);
 
+const loading= ref(false);
+
 const form = useForm('patch', `/api/tasks/${route.params.id}`, {
     title: null,
     description: null,
@@ -123,11 +131,18 @@ const form = useForm('patch', `/api/tasks/${route.params.id}`, {
 const editing = ref(false);
 
 onMounted(async () => {
+    loading.value=true;
     try {
         const response = await axios.get(`/api/tasks/${route.params.id}`);
         task.value = response.data;
-    } catch (error) {
+    } 
+    
+    catch (error) {
         console.error('Error fetching task details:', error);
+    }
+
+    finally{
+        loading.value=false
     }
 });
 
@@ -151,14 +166,22 @@ const cancelEditing = () => {
 const submitChanges = async () => {
     if(validateEditForm(form))
     {
-        errors.value={}
+        errors.value={};
 
+        loading.value=true;
+        
         try {
             const response= await form.submit();
             editing.value = false;
             task.value =response.data;
-        } catch (error) {
+        } 
+        
+        catch (error) {
             console.error('Error creating task:', error);
+        }
+
+        finally{
+            loading.value=false
         }
     }
 };
