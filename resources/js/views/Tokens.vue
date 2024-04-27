@@ -45,7 +45,7 @@ const access_token = ref(null);
 const generateNewToken = async () => {
     loading.value = true;
     try {
-        const response = await axios.post('/api/tokens');
+        const response = await axios.post(route('tokens'));
         access_token.value = response.data;
     }
     catch (error) {

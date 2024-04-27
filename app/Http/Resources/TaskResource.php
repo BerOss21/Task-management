@@ -27,7 +27,6 @@ class TaskResource extends JsonResource
             ],
             'status'=>[
                 'name'=>$this->status,
-                'color'=>$this->status->color(),
                 'states'=>Task::getStatesFor('status')
             ],
             'user'=>new UserResource($this->whenLoaded('user'))

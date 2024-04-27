@@ -10,5 +10,4 @@
 import Filters from '../components/Filters.vue';
 import Pagination from '../components/Pagination.vue';
 import Datatable from '../components/Datatable.vue';
-import Sidebar from '../components/Sidebar.vue';
 </script>

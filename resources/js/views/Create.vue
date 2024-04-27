@@ -80,11 +80,9 @@ const {errors, validateCreateForm} = useValidation();
 
 const router = useRouter();
 
-import Sidebar from '../components/Sidebar.vue';
-
 const loading=ref(false);
 
-const form = useForm('post', '/api/tasks', {
+const form = useForm('post', route('tasks.store'), {
     title: null,
     description: null,
     status: null,

@@ -116,13 +116,13 @@ const { getStatistics } = useStatisticStore();
 
 const {errors, validateEditForm} = useValidation();
 
-const route = useRoute();
+const use_route = useRoute();
 
 const task = ref(null);
 
 const loading= ref(false);
 
-const form = useForm('patch', `/api/tasks/${route.params.id}`, {
+const form = useForm('patch', route('tasks.update',use_route.params.id), {
     title: null,
     description: null,
     status: null,
@@ -134,7 +134,7 @@ const editing = ref(false);
 onMounted(async () => {
     loading.value=true;
     try {
-        const response = await axios.get(`/api/tasks/${route.params.id}`);
+        const response = await axios.get(`/api/tasks/${use_route.params.id}`);
         task.value = response.data;
     } 
     

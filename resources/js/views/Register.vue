@@ -104,14 +104,12 @@ const form=useForm('post','/register',{
 })
 
 const register=async()=>{
-    console.log('errrrrrr',errors.value);
-
     if(validateRegisterForm(form))
     {
         errors.value={};
 
         try {
-            await axios.get('/sanctum/csrf-cookie');
+            await axios.get(route('sanctum.csrf-cookie'));
             const response = await form.submit();
             localStorage.setItem('user',JSON.stringify(response.data));
             updateUser();

@@ -51,7 +51,7 @@
                     <li>title (text)</li>
                     <li>description (text)</li>
                     <li>due_date (date:d-m-Y)</li>
-                    <li>status (text)</li>
+                    <li>status (in progress, completed)</li>
                 </ul>
                 <p class="font-semibold">Authentication:</p>
                 <p>Bearer Token</p>
@@ -66,7 +66,7 @@
                     <li>title (text)</li>
                     <li>description (text)</li>
                     <li>due_date (date:d-m-Y)</li>
-                    <li>status (text)</li>
+                    <li>status (in progress, completed)</li>
                 </ul>
                 <p class="font-semibold">Authentication:</p>
                 <p>Bearer Token</p>

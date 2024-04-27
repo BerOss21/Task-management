@@ -9,7 +9,7 @@ export const useStatisticStore = defineStore('statistics', () => {
     const getStatistics=async()=>{
         loading_statistics.value=true;
         try{
-            const response= await axios.get('/api/statistics');
+            const response= await axios.get(route('statistics'));
             statistics.value=response.data;
         }
         catch(error)

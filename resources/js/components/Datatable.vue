@@ -38,11 +38,15 @@
 </template>
 
 <script setup>
-  import {  onMounted, watch } from 'vue';
+  import {  onMounted, watch, onUnmounted } from 'vue';
   import { storeToRefs } from 'pinia';
   import { useTaskStore } from '../stores/tasks';
   import { useFilterStore } from '../stores/filters';
   import { debounce, filter } from 'lodash';
+
+  import {useStatisticStore} from '../stores/statistics';
+
+  const { getStatistics } = useStatisticStore();
 
   const taskStore = useTaskStore();
   const filterStore = useFilterStore();
@@ -50,17 +54,26 @@
   const { tasks, loading } = storeToRefs(taskStore);
   const { sort, filters } = storeToRefs(filterStore);
 
+  const { resetFilters } = filterStore;
+
   const { getTasks, deleteTask } = taskStore;
 
-  const removeTask=(id)=>{
+  const removeTask=async (id)=>{
     if(confirm('Delete this task ?'))
     {
-        deleteTask(id, sort.value, filters.value);
+        await deleteTask(id, sort.value, filters.value);
+        await getStatistics();
     }
   }
 
-  onMounted(async () => await getTasks('/api/tasks',{ sort:sort.value, filters:filters.value }));
+  onUnmounted(() => {
+    resetFilters();
+  });
+
+  onMounted(async () => {
+    await getTasks(route('tasks.index'))
+  });
   
-  watch(()=>sort, debounce(() => { getTasks('/api/tasks', { sort:sort.value, filters:filters.value }) }, 500),{deep:true})
+  watch(()=>sort, debounce(() => { getTasks(route('tasks.index'), { sort:sort.value, filters:filters.value }) }, 500),{deep:true})
 
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col md:flex-row gap-2">
-        <div class="bg-base-200 shadow-md rounded-md p-2 space-y-2 mb-3 w-full">
+        <div class="bg-base-200 md:w-4/6 shadow-md rounded-md p-2 space-y-2 mb-3 w-full">
             <h3>Filters</h3>
             <div class="flex flex-col md:flex-row gap-2">
                 <label class="input input-bordered input-sm flex items-center gap-2">
@@ -11,13 +11,14 @@
                     <option value="in progress">In progress</option>
                     <option value="completed">Completed</option>
                 </select>
-                <label class="input input-bordered input-sm flex items-center gap-2 ">
-                    <input type="date" v-model="filters.due_date" class="grow" />
+                <label class="input input-sm input-bordered flex items-center gap-2 ">
+                    <small class="text-xs text-nowrap">Due date</small>
+                    <input type="date" v-model="filters.due_date"  />
                 </label>
             </div>
         </div>
 
-        <div class="bg-base-200 shadow-md rounded-md p-2 space-y-2 mb-3 w-full">
+        <div class="bg-base-200 md:w-2/6 shadow-md rounded-md p-2 space-y-2 mb-3 w-full">
             <h3>Sort by</h3>
             <div class="flex flex-col md:flex-row gap-2">
                 <label class="form-control w-full max-w-xs">
@@ -54,7 +55,7 @@ const { getTasks } = taskStore;
 const { sort, filters } = filterStore;
 
 watch(filters, debounce(async () => {
-    await getTasks('/api/tasks', { sort, filters })
+    await getTasks(route('tasks.index'), { sort, filters })
 }, 500)
 )
 </script>

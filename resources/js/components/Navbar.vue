@@ -37,7 +37,7 @@
     const logout=async()=>{
         try
         {
-            await axios.post('/logout');
+            await axios.post(route('logout'));
             localStorage.removeItem('user');
             updateUser();
             router.push({name:'login'});

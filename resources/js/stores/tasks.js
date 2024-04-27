@@ -31,8 +31,8 @@ export const useTaskStore = defineStore('tasks', () => {
         loading.value=true;
 
         try {
-            await axios.delete(`/api/tasks/${taskId}`);
-            await getTasks('/api/tasks',{ sort:sort, filters:filters });
+            await axios.delete(route('tasks.destroy',taskId));
+            await getTasks(route('tasks.index'),{ sort:sort, filters:filters });
         } 
         catch (error) {
             console.error('Error updating task:', error);
