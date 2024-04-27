@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         Task::factory(25)->create([
             'user_id'=> $user->id
         ]);
+        
         Task::factory(100)->create();
     }
 }
